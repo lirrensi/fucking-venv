@@ -1,11 +1,11 @@
 # FuckingVenv installer for PowerShell
 #
 # Usage:
-#   iex (iwr https://.../install.ps1)
+#   powershell -ExecutionPolicy Bypass -Command "iwr -UseBasicParsing https://.../install.ps1 | iex"
 #
 # What it does:
 #   1. Appends venv function to your PowerShell profile
-#   2. Sources it RIGHT NOW so it works immediately
+#   2. Defines it RIGHT NOW so it works immediately (no execution policy issues)
 
 param()
 
@@ -80,9 +80,10 @@ if (-not (Test-Path $ProfileDir)) {
 if (Test-Path $ProfilePath) {
     $content = Get-Content $ProfilePath -Raw -ErrorAction SilentlyContinue
     if ($content -and $content.Contains($MarkerStart)) {
-        Write-Host "✨ Already installed! Reloading profile..."
-        . $ProfilePath
-        Write-Host "✨ Done! Try: venv"
+        Write-Host "✨ Already installed!"
+        # Define function directly in memory (bypasses execution policy)
+        . ([ScriptBlock]::Create($VenvFunction))
+        Write-Host "✨ Ready! Try: venv"
         return
     }
 }
@@ -97,11 +98,8 @@ $MarkerEnd
 
 Add-Content -Path $ProfilePath -Value $block -Encoding UTF8
 
-# Source it NOW
-. $ProfilePath
+# Define function directly in memory (bypasses execution policy)
+. ([ScriptBlock]::Create($VenvFunction))
 
 Write-Host ""
-Write-Host "✨ Installed! The 'venv' command is ready."
-Write-Host "   Try it: venv"
-Write-Host ""
-Write-Host "   (Already loaded in this shell - no restart needed!)"
+Write-Host "✨ Installed! Try: venv"

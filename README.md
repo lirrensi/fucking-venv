@@ -12,7 +12,7 @@ eval "$(curl -sSL https://raw.githubusercontent.com/lirrensi/fucking-venv/main/i
 
 ### Windows (PowerShell)
 ```powershell
-iex (iwr https://raw.githubusercontent.com/lirrensi/fucking-venv/main/install.ps1)
+powershell -ExecutionPolicy Bypass -Command "iwr -UseBasicParsing https://raw.githubusercontent.com/lirrensi/fucking-venv/main/install.ps1 | iex"
 ```
 
 That's it. One command. Done forever.
