@@ -7,7 +7,7 @@ Have you fucking tired of doing `sOuRcE .vEnV/bIn/aCtIvAtE` each and every time?
 
 ### Unix (bash/zsh/fish)
 ```bash
-curl -sSL https://raw.githubusercontent.com/lirrensi/fucking-venv/main/install.sh | sh
+eval "$(curl -sSL https://raw.githubusercontent.com/lirrensi/fucking-venv/main/install.sh)"
 ```
 
 ### Windows (PowerShell)

@@ -2,12 +2,12 @@
 # FuckingVenv installer - because typing source .venv/bin/activate is bullshit
 #
 # Usage:
-#   curl -sSL https://.../install.sh | sh
+#   eval "$(curl -sSL https://.../install.sh)"
 #
 # What it does:
 #   1. Detects your shell (bash/zsh/fish)
 #   2. Appends venv() function to your rcfile
-#   3. Sources it RIGHT NOW so it works immediately
+#   3. Outputs the function so eval loads it NOW
 
 set -e
 
@@ -144,17 +144,21 @@ main() {
     shell=$(detect_shell)
     rcfile=$(get_rcfile "$shell")
     
-    echo "🐾 Detected shell: $shell"
-    echo "🐾 Target rcfile: $rcfile"
+    echo "🐾 Detected shell: $shell" >&2
+    echo "🐾 Target rcfile: $rcfile" >&2
     
     # Create directory if needed (fish)
     mkdir -p "$(dirname "$rcfile")" 2>/dev/null || true
     
     # Check if already installed
     if [ -f "$rcfile" ] && grep -q "$MARKER_START" "$rcfile" 2>/dev/null; then
-        echo "✨ Already installed! Sourcing..."
-        . "$rcfile"
-        echo "✨ Done! Try: venv"
+        echo "✨ Already installed!" >&2
+        # Output the function for eval
+        case "$shell" in
+            fish) echo "$VENV_FUNCTION_FISH" ;;
+            *)    echo "$VENV_FUNCTION" ;;
+        esac
+        echo "echo '✨ Ready! Try: venv' >&2" >&2
         return 0
     fi
     
@@ -172,14 +176,9 @@ main() {
         echo "$MARKER_END"
     } >> "$rcfile"
     
-    # Source it NOW
-    . "$rcfile"
-    
-    echo ""
-    echo "✨ Installed! The 'venv' command is ready."
-    echo "   Try it: venv"
-    echo ""
-    echo "   (Already loaded in this shell - no restart needed!)"
+    # Output the function for eval (so it works NOW)
+    echo "$func"
+    echo "echo '✨ Installed! Try: venv' >&2" >&2
 }
 
 main
