@@ -1,0 +1,17 @@
+[project]
+name = "fuckingvenv"
+version = "0.1.1"
+description = "Stop typing source .venv/bin/activate already!"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/lirrensi/fucking-venv"
+
+[project.scripts]
+venv-install = "fuckingvenv:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
